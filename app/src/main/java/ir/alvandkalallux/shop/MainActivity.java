@@ -55,7 +55,19 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
 
+                @Override
+                public void onPageFinished(WebView view, String url)
+                {
+                    // hide element by class name
+//                    webView.loadUrl("javascript:(function() { " +
+//                            "document.getElementsByClassName('your_class_name')[0].style.display='none'; })()");
+                    // hide element by id
 
+                    webView.loadUrl("javascript:(function() { " +
+                            "document.getElementById('top-bar').style.display='none';" +
+                            "document.getElementById('footer').style.display='none';})()");
+
+                }
 
             });//enable go forward and go back
 
