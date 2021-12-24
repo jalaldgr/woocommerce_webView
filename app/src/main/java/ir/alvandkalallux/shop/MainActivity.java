@@ -3,8 +3,10 @@ package ir.alvandkalallux.shop;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -36,7 +38,23 @@ public class MainActivity extends AppCompatActivity {
             webSettings.setJavaScriptEnabled(true);//enable menu works
             webView.getSettings().setLoadsImagesAutomatically(true);
             webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-            webView.setWebViewClient(new WebViewClient());//enable go forward and go back
+            webView.setWebViewClient(new WebViewClient(){
+
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    if( url.startsWith("http:") || url.startsWith("https:") ) {
+                        return false;
+                    }
+                    // Otherwise allow the OS to handle things like tel, mailto, etc.
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity( intent );
+                    return true;
+                }
+
+
+
+            });//enable go forward and go back
+
             webSettings.setAllowFileAccess(true);//extra
             webSettings.setAppCacheEnabled(true);//extra
         }
