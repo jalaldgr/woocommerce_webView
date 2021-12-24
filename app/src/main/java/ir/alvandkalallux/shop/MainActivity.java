@@ -14,6 +14,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -21,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     WebView webView;
     private boolean exit = false;
-
+    FloatingActionButton refreshButton;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         webView = findViewById(R.id.MainActivityWebView);
+        refreshButton = findViewById(R.id.refreshFloatingButton);
+
 
         if(isOnline()){
 
@@ -62,6 +66,15 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "اینترنت وصل نیست...", Toast.LENGTH_LONG).show();
 
         }
+
+
+
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                webView.loadUrl(webView.getUrl());
+            }
+        });
 
 
     }

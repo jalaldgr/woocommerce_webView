@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,7 +9,25 @@
     <WebView
         android:id="@+id/MainActivityWebView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
 
-    
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </WebView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/refreshFloatingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"
+        android:layout_margin="32dp"
+        android:contentDescription="@string/refresh"
+        android:fadeScrollbars="true"
+        android:isScrollContainer="true"
+        android:src="@drawable/ic_baseline_refresh_24"
+        app:backgroundTint="@android:color/transparent"
+        app:elevation="2dp"
+        app:pressedTranslationZ="4dp"
+        app:rippleColor="@color/green_M700"
+        app:tint="@color/green_M700"/>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
