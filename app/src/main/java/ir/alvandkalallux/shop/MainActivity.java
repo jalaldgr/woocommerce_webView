@@ -3,15 +3,19 @@ package ir.alvandkalallux.shop;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -24,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     WebView webView;
     private boolean exit = false;
     FloatingActionButton refreshButton;
+    ProgressBar progressBar;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -32,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         webView = findViewById(R.id.MainActivityWebView);
         refreshButton = findViewById(R.id.refreshFloatingButton);
-
+        progressBar = findViewById(R.id.progressBar);
 
         if(isOnline()){
 
@@ -67,7 +72,15 @@ public class MainActivity extends AppCompatActivity {
                             "document.getElementById('top-bar').style.display='none';" +
                             "document.getElementById('footer').style.display='none';})()");
 
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
+
+                @Override
+                public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                    progressBar.setVisibility(View.VISIBLE);
+
+                }
+
 
             });//enable go forward and go back
 
