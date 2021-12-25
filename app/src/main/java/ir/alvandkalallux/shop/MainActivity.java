@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean exit = false;
     FloatingActionButton refreshButton;
     ProgressBar progressBar;
+    boolean noInternet=false;
+    String currentUrl="https://alvandkalalux.ir/";
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -39,15 +42,14 @@ public class MainActivity extends AppCompatActivity {
         refreshButton = findViewById(R.id.refreshFloatingButton);
         progressBar = findViewById(R.id.progressBar);
 
-        if(isOnline()){
+
 
             String url = "https://alvandkalalux.ir/"; //Enter your url here
-            webView.loadUrl(url);
             WebSettings webSettings = webView.getSettings();
-            webSettings.setJavaScriptEnabled(true);//enable menu works
-            webView.getSettings().setLoadsImagesAutomatically(true);
-            webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-            webView.setWebViewClient(new WebViewClient(){
+        webSettings.setJavaScriptEnabled(true);//enable menu works
+        webView.getSettings().setLoadsImagesAutomatically(true);
+        webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        webView.setWebViewClient(new WebViewClient(){
 
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -60,44 +62,45 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
 
-                @Override
-                public void onPageFinished(WebView view, String url)
-                {
-                    // hide element by class name
-//                    webView.loadUrl("javascript:(function() { " +
-//                            "document.getElementsByClassName('your_class_name')[0].style.display='none'; })()");
-                    // hide element by id
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                progressBar.setVisibility(View.VISIBLE);
 
-                    webView.loadUrl("javascript:(function() { " +
-                            "document.getElementById('top-bar').style.display='none';" +
-                            "document.getElementById('footer').style.display='none';})()");
+            }
 
-                    progressBar.setVisibility(View.INVISIBLE);
+            @Override
+            public void onPageFinished(WebView view, String url)
+            {
+
+                webView.loadUrl("javascript:(function() { " +
+                        "document.getElementById('top-bar').style.display='none';" +
+                        "document.getElementById('footer').style.display='none';})()");
+
+                progressBar.setVisibility(View.INVISIBLE);
+                if(noInternet){  webView.loadUrl("file:///android_asset/error.html");
                 }
+                noInternet=false;
+            }
 
-                @Override
-                public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                    progressBar.setVisibility(View.VISIBLE);
+            @Override public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                currentUrl = failingUrl;
 
-                }
+                noInternet=true;
 
+            }
 
             });//enable go forward and go back
-
+        webView.loadUrl(url);
             webSettings.setAllowFileAccess(true);//extra
             webSettings.setAppCacheEnabled(true);//extra
-        }
-        else {
-            Toast.makeText(this, "اینترنت وصل نیست...", Toast.LENGTH_LONG).show();
 
-        }
 
 
 
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                webView.loadUrl(webView.getUrl());
+                webView.loadUrl(currentUrl);
             }
         });
 
