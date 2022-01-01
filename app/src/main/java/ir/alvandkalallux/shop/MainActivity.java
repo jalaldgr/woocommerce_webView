@@ -73,8 +73,12 @@ public class MainActivity extends AppCompatActivity {
             {
 
                 webView.loadUrl("javascript:(function() { " +
-                        "document.getElementById('top-bar').style.display='none';" +
-                        "document.getElementById('footer').style.display='none';})()");
+                        "document.getElementById('footer').style.display='none';" +
+                        "var elems = document.getElementsByClassName('hhh');" +
+                        "for (var i=0;i<elems.length;i+=1){" +
+                        "  elems[i].style.display = 'none';" +
+                        "}" +
+                        "})()");
 
                 progressBar.setVisibility(View.INVISIBLE);
                 if(noInternet){  webView.loadUrl("file:///android_asset/error.html");
