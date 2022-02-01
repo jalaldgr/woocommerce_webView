@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -31,9 +32,11 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton refreshButton;
     ProgressBar progressBar;
     boolean noInternet=false;
+    static String DEEP_LINK_PREFIX="https://www.zarinpal.com/";
+    static String DEEP_LINK_PREFIX_2="https://sepehr.shaparak.ir:8080/";
     String currentUrl="https://alvandkalalux.ir/";
 
-    @SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint({"SetJavaScriptEnabled", "JavascriptInterface"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,9 +56,19 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    if( url.startsWith("http:") || url.startsWith("https:") ) {
+                    Log.d("hhh", "shouldOverrideUrlLoading Url: "+url);
+                    if (url.contains(DEEP_LINK_PREFIX)||url.contains(DEEP_LINK_PREFIX_2)) {
+
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(url));
+                        startActivity(intent);
+
+                        return true;
+                    }
+                    if( url.startsWith("http:") || url.startsWith("https:")  ) {
                         return false;
                     }
+
                     // Otherwise allow the OS to handle things like tel, mailto, etc.
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity( intent );
@@ -132,6 +145,28 @@ public class MainActivity extends AppCompatActivity {
             exit=true;
         }
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
+
+
+            Uri uri = intent.getData();
+            Log.d("hhh", "onNewIntent: "+uri.getQuery());
+            try {
+                String q = uri.getQueryParameter("q");
+                String s = uri.getQueryParameter("s");
+
+                //do something with data
+
+            }catch (NullPointerException exception) {
+                exception.printStackTrace();
+            }
+        }
+    }
+
+
 
     protected boolean isOnline(){
         ConnectivityManager cm = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);
